@@ -1,0 +1,5 @@
+{
+    "env": {
+        "MONGO_NODE_SERVER_PORT": "27017"
+    }
+}
