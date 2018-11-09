@@ -2,6 +2,16 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const databaseName = "node-rest-shop";
+
+mongoose.connect('mongodb://localhost:27017/' + databaseName, { useNewUrlParser: true });
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+	  console.log("we're connected to '" + databaseName + "'!");
+});
 
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
@@ -26,7 +36,7 @@ app.use((req, res, next) => {
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 
-app.use((req,re, next) => {
+app.use((req, res, next) => {
 	const error = new Error('not found');
 	error.status = 404;
 	next(error);

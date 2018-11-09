@@ -1,5 +1,5 @@
 {
     "env": {
-        "MONGO_NODE_SERVER_PORT": "27017"
+        "MONGO_NODE_DATABASE": "node-rest-shop"
     }
 }
