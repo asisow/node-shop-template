@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const databaseName = "node-rest-shop";
 
+mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/' + databaseName, { useNewUrlParser: true });
 
 const db = mongoose.connection;
@@ -17,6 +18,7 @@ const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
 app.use(morgan('dev'));
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 

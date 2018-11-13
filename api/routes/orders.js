@@ -8,7 +8,7 @@ const Product = require('../models/product');
 router.get('/', (req, res, next) => {
     Order.find()
         .select('_id product quantity')
-        .populate('product', 'name')
+        .populate('product', '_id name')
         .exec()
         .then(result => {
             res.status(200).json({
@@ -34,7 +34,7 @@ router.get('/', (req, res, next) => {
         });
 });
 
-router.post('/', (req, res, next) => {
+router.post('/',(req, res, next) => {
     Product.findById(req.body.productId)
         .then(product => {
             if (!product) {
@@ -47,36 +47,29 @@ router.post('/', (req, res, next) => {
                 quantity: req.body.quantity,
                 product: req.body.productId
             });
-            order.save()
-                .then(result => {
-                    console.log("Created order: ", result);
-                    res.status(201).json({
-                        message: 'Order was created',
-                        createdObject: {
-                            _id: result._id,
-                            productId: result.product,
-                            quantity: result.quantity
-                        },
-                        request: {
-                            type: 'GET',
-                            url: 'http://localhost:3000/orders/'
-                        }
-                    });
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(500).json({
-                        error: err
-                    });
-                });
+            return order.save()
+        })
+        .then(result => {
+            console.log("Created order: ", result);
+            res.status(201).json({
+                message: 'Order was created',
+                createdObject: {
+                    _id: result._id,
+                    productId: result.product,
+                    quantity: result.quantity
+                },
+                request: {
+                    type: 'GET',
+                    url: 'http://localhost:3000/orders/'
+                }
+            });
         })
         .catch(err => {
+            console.log(err);
             res.status(500).json({
-                message: 'Product not found',
-                erroe: err
-            })
+                error: err
+            });
         });
-    
 });
 
 router.get('/:orderId', (req, res, next) => {
