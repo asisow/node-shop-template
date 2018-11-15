@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/')
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + file.originalname);
+        cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
     }
 });
 
@@ -24,7 +24,10 @@ const fileFilter = function (req, file, cb) {
 const upload = multer({
     //dest: 'uploads/', filename: function(req,file, cb) {cb(null, file.fieldname + Date.now());
     storage: storage,
-    fileFilter: fileFilter
+    fileFilter: fileFilter,
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    }
 });
 
 const Product = require('../models/product');
